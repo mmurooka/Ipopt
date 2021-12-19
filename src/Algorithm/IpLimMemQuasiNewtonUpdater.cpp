@@ -218,6 +218,9 @@ void LimMemQuasiNewtonUpdater::UpdateHessian()
       curr_grad_f = IpCq().curr_grad_f();
       curr_jac_c = IpCq().curr_jac_c();
       curr_jac_d = IpCq().curr_jac_d();
+
+      Jnlst().Printf(J_DETAILED, J_HESSIAN_APPROXIMATION,
+                     "[Debug] IpData().curr()->x()->Nrm2() = %e\n", IpData().curr()->x()->Nrm2());
    }
    //DBG_PRINT_VECTOR(2, "curr_x", *curr_x);
 
@@ -280,6 +283,8 @@ void LimMemQuasiNewtonUpdater::UpdateHessian()
    DBG_PRINT_VECTOR(2, "last_x", *last_x_);
    DBG_PRINT_VECTOR(2, "curr_x", *curr_x);
    s_full_new->AddTwoVectors(1, *curr_x, -1, *last_x_, 0.);
+   Jnlst().Printf(J_DETAILED, J_HESSIAN_APPROXIMATION,
+                  "[Debug] curr_x_nrm2 = %e, last_x_nrm2 = %e\n", curr_x->Nrm2(), last_x_->Nrm2());
 
    // y = grad_lag(x_k,y_k) - grad_lag(x_{k-1},y_k)
    SmartPtr<Vector> y_full_new = curr_x->MakeNew();
@@ -323,6 +328,10 @@ void LimMemQuasiNewtonUpdater::UpdateHessian()
       P_LM->TransMultVector(1., *s_full_new, 0., *s_new);
       P_LM->TransMultVector(1., *y_full_new, 0., *y_new);
    }
+   Jnlst().Printf(J_DETAILED, J_HESSIAN_APPROXIMATION,
+                  "[Debug] s_full_new_nrm2 = %e y_full_new_nrm2 = %e\n", s_full_new->Nrm2(), y_full_new->Nrm2());
+   Jnlst().Printf(J_DETAILED, J_HESSIAN_APPROXIMATION,
+                  "[Debug] s_new_nrm2 = %e y_new_nrm2 = %e\n", s_new->Nrm2(), y_new->Nrm2());
    s_full_new = NULL;
    y_full_new = NULL;
    DBG_PRINT_VECTOR(2, "s_new", *s_new);
